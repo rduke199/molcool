@@ -34,6 +34,7 @@ def canvas(with_attribution=True):
         quote += "\n\t- Adapted from Henry David Thoreau"
     return quote
 
+
 def zen():
     quote = """Beautiful is better than ugly.
     Explicit is better than implicit.
@@ -57,8 +58,10 @@ def zen():
 
     return quote
 
+
 def calculate_distance(rA, rB):
-    """Calculate the distance between two points.
+    """
+    Calculate the distance between two points.
 
     Parameters
     ----------
@@ -77,7 +80,7 @@ def calculate_distance(rA, rB):
     >>> calculate_distance(r1, r2)
     0.1
     """
-    if isinstance(rA,np.ndarray) is False or isinstance(rB,np.ndarray) is False:
+    if isinstance(rA, np.ndarray) is False or isinstance(rB, np.ndarray) is False:
         raise TypeError("rA and rB must by numpy arrays")
 
     dist_vect = (rA - rB)
@@ -88,7 +91,26 @@ def calculate_distance(rA, rB):
 
     return dististance
 
+
 def open_pdb(file_location):
+    """One line description here.
+
+    The pdb file must specify the atom elements in the last column, and follow
+    the conventions outlined in the PDB format specification.
+
+    Parameters
+    ----------
+    file_location : stri
+        The location of the pdb file to read in.
+
+    Returns
+    -------
+    coords : np.ndarray
+        The coordinates of the pdb file.
+    symbols : list
+        The atomic symbols of the pdb file.
+
+    """
 
     with open(file_location) as f:
         data = f.readlines()
@@ -106,6 +128,7 @@ def open_pdb(file_location):
 
     return symbols, coords
 
+
 atomic_weights = {
     'H': 1.00784,
     'C': 12.0107,
@@ -122,10 +145,11 @@ def open_xyz(file_location):
 
     # Open an xyz file and return symbols and coordinates.
     xyz_file = np.genfromtxt(fname=file_location, skip_header=2, dtype='unicode')
-    symbols = xyz_file[:,0]
-    coords = (xyz_file[:,1:])
+    symbols = xyz_file[:, 0]
+    coords = (xyz_file[:, 1:])
     coords = coords.astype(np.float)
     return symbols, coords
+
 
 def write_xyz(file_location, symbols, coordinates):
 
@@ -136,24 +160,30 @@ def write_xyz(file_location, symbols, coordinates):
         f.write('XYZ file\n')
 
         for i in range(num_atoms):
-            f.write('{}\t{}\t{}\t{}\n'.format(symbols[i],
-                                              coordinates[i,0], coordinates[i,1], coordinates[i,2]))
+            f.write('{}\t{}\t{}\t{}\n'.format(symbols[i], coordinates[i, 0], coordinates[i, 1], coordinates[i, 2]))
+
 
 def draw_molecule(coordinates, symbols, draw_bonds=None, save_location=None, dpi=300):
 
     # Create figure
     fig = plt.figure()
-    ax = fig.add_subplot(111, projection='3d')
+    ax = fig.add_subplot(111, projection = '3d')
 
     # Get colors - based on atom name
     colors = []
     for atom in symbols:
         colors.append(atom_colors[atom])
 
-    size = np.array(plt.rcParams['lines.markersize'] ** 2)*200/(len(coordinates))
+    size = np.array(plt.rcParams['lines.markersize']**2) * 200 / (len(coordinates))
 
-    ax.scatter(coordinates[:,0], coordinates[:,1], coordinates[:,2], marker="o",
-               edgecolors='k', facecolors=colors, alpha=1, s=size)
+    ax.scatter(coordinates[:, 0],
+               coordinates[:, 1],
+               coordinates[:, 2],
+               marker="o",
+               edgecolors='k',
+               facecolors=colors,
+               alpha=1,
+               s=size)
 
     # Draw bonds
     if draw_bonds:
@@ -161,8 +191,10 @@ def draw_molecule(coordinates, symbols, draw_bonds=None, save_location=None, dpi
             atom1 = atoms[0]
             atom2 = atoms[1]
 
-            ax.plot(coordinates[[atom1,atom2], 0], coordinates[[atom1,atom2], 1],
-                    coordinates[[atom1,atom2], 2], color='k')
+            ax.plot(coordinates[[atom1, atom2], 0],
+                    coordinates[[atom1, atom2], 1],
+                    coordinates[[atom1, atom2], 2],
+                    color='k')
 
     plt.axis('square')
 
@@ -172,15 +204,17 @@ def draw_molecule(coordinates, symbols, draw_bonds=None, save_location=None, dpi
 
     return ax
 
+
 def calculate_angle(rA, rB, rC, degrees=False):
     AB = rB - rA
     BC = rB - rC
-    theta=np.arccos(np.dot(AB, BC)/(np.linalg.norm(AB)*np.linalg.norm(BC)))
+    theta = np.arccos(np.dot(AB, BC) / (np.linalg.norm(AB) * np.linalg.norm(BC)))
 
     if degrees:
         return np.degrees(theta)
     else:
         return theta
+
 
 def bond_histogram(bond_list, save_location=None, dpi=300, graph_min=0, graph_max=2):
 
@@ -196,7 +230,6 @@ def bond_histogram(bond_list, save_location=None, dpi=300, graph_min=0, graph_ma
     plt.xlabel('Bond Length (angstrom)')
     plt.ylabel('Number of Bonds')
 
-
     ax.hist(lengths, bins=bins)
 
     # Save figure
@@ -204,6 +237,7 @@ def bond_histogram(bond_list, save_location=None, dpi=300, graph_min=0, graph_ma
         plt.savefig(save_location, dpi=dpi)
 
     return ax
+
 
 def build_bond_list(coordinates, max_bond=1.5, min_bond=0):
 
@@ -219,6 +253,7 @@ def build_bond_list(coordinates, max_bond=1.5, min_bond=0):
 
     return bonds
 
+
 atom_colors = {
     'H': 'white',
     'C': '#D3D3D3',
@@ -230,7 +265,6 @@ atom_colors = {
     'Br': '#F4A460',
     'S': 'yellow'
 }
-
 
 if __name__ == "__main__":
     # Do something if this file is invoked on its own
