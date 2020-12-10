@@ -58,13 +58,17 @@ def zen():
     return quote
 
 def calculate_distance(rA, rB):
+
     if isinstance(rA,np.ndarray) is False or isinstance(rB,np.ndarray) is False:
         raise TypeError("rA and rB must by numpy arrays")
-    d=(rA-rB)
-    dist=np.linalg.norm(d)
-    if dist == 0.0:
+
+    dist_vect = (rA - rB)
+    dististance = np.linalg.norm(dist_vect)
+
+    if dististance == 0.0:
         raise Exception("Tow atoms are located in the same poin in space")
-    return dist
+
+    return dististance
 
 def open_pdb(file_location):
 
@@ -81,7 +85,7 @@ def open_pdb(file_location):
 
     coords = np.array(coordinates)
     symbols = np.array(symbols)
-    
+
     return symbols, coords
 
 atomic_weights = {
